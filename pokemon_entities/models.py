@@ -1,4 +1,5 @@
 from django.db import models  # noqa F401
+import datetime
 
 class Pokemon(models.Model):
     title = models.CharField(max_length=50)
@@ -13,3 +14,7 @@ class PokemonEntity(models.Model):
                                 verbose_name="Покемон")
     Lat = models.FloatField(verbose_name="Широта")
     Lon = models.FloatField(verbose_name="Долгота")
+    Appeared_at = models.DateTimeField(verbose_name="Появится в:",
+                                       default=datetime.datetime.now)
+    Disappeared_at = models.DateTimeField(verbose_name="Исчезнет в:",
+                                          default=datetime.datetime.now)
