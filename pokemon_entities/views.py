@@ -29,15 +29,15 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 def show_all_pokemons(request):
     pokemons = Pokemon.objects.all()
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    pokemon_entitys = PokemonEntity.objects.filter(Disappeared_at__gte=localtime(), Appeared_at__lte=localtime())
+    pokemon_entitys = PokemonEntity.objects.filter(disappeared_at__gte=localtime(), appeared_at__lte=localtime())
 
     for pokemon_entity in pokemon_entitys:
         img_url = None
-        if pokemon_entity.Pokemon.image:
-            img_url = request.build_absolute_uri(pokemon_entity.Pokemon.image.url)
+        if pokemon_entity.pokemon.image:
+            img_url = request.build_absolute_uri(pokemon_entity.pokemon.image.url)
         add_pokemon(
-            folium_map, pokemon_entity.Lat,
-            pokemon_entity.Lon,
+            folium_map, pokemon_entity.lat,
+            pokemon_entity.lon,
             img_url
         )
 
@@ -63,11 +63,6 @@ def show_pokemon(request, pokemon_id):
         requested_pokemon = Pokemon.objects.get(id=pokemon_id)
     except Pokemon.DoesNotExist:
         HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
-    pokemon_entitys = PokemonEntity.objects.filter(
-        Pokemon=requested_pokemon,
-        Disappeared_at__gte=localtime(),
-        Appeared_at__lte=localtime()
-        )
 
     pokemon = {
         "pokemon_id": requested_pokemon.id,
@@ -91,13 +86,15 @@ def show_pokemon(request, pokemon_id):
         }
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    for pokemon_entity in pokemon_entitys:
+    for pokemon_entity in requested_pokemon.pokemon_set.filter(
+                                        disappeared_at__gte=localtime(),
+                                        appeared_at__lte=localtime()):
         img_url = None
-        if pokemon_entity.Pokemon.image:
-            img_url = request.build_absolute_uri(pokemon_entity.Pokemon.image.url)
+        if pokemon_entity.pokemon.image:
+            img_url = request.build_absolute_uri(pokemon_entity.pokemon.image.url)
         add_pokemon(
-            folium_map, pokemon_entity.Lat,
-            pokemon_entity.Lon,
+            folium_map, pokemon_entity.lat,
+            pokemon_entity.lon,
             img_url
         )
 
