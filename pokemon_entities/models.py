@@ -1,14 +1,29 @@
 from django.db import models  # noqa F401
 import datetime
 
+
 class Pokemon(models.Model):
-    title = models.CharField(max_length=50)
+    title_ru = models.CharField(verbose_name="Название на русском",
+                                max_length=200, null=True, blank=True)
+    title_en = models.CharField(verbose_name="Название на английском",
+                                max_length=200)
+    title_jp = models.CharField(verbose_name="Название на японском",
+                                max_length=200, null=True, blank=True)
+    image = models.ImageField(verbose_name="Изображение",
+                              null=True, blank=True)
+    description = models.TextField(verbose_name="Описание", null=True, blank=True)
+    previous_evolution = models.ForeignKey("self",
+                                           on_delete=models.SET_NULL,
+                                           null=True,
+                                           blank=True,
+                                           related_name='next_evolutions',
+                                           verbose_name="Предыдущая эволюция",)
     id = models.BigAutoField(primary_key=True)
-    image = models.ImageField(null=True, blank=True)
 
     def __str__(self):
-            return self.title_ru
-        
+        return self.title_ru
+
+
 class PokemonEntity(models.Model):
     Pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE,
                                 verbose_name="Покемон")
