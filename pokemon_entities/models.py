@@ -11,7 +11,7 @@ class Pokemon(models.Model):
                                 max_length=200, blank=True)
     image = models.ImageField(verbose_name="Изображение",
                               null=True, blank=True)
-    description = models.TextField(verbose_name="Описание", null=True, blank=True)
+    description = models.TextField(verbose_name="Описание", blank=True)
     previous_evolution = models.ForeignKey("self",
                                            on_delete=models.SET_NULL,
                                            null=True,
@@ -34,11 +34,11 @@ class PokemonEntity(models.Model):
                                        default=datetime.datetime.now)
     disappeared_at = models.DateTimeField(verbose_name="Исчезнет в:",
                                           default=datetime.datetime.now)
-    level = models.IntegerField(verbose_name="Уровень", default=None, null=True, blank=True)
-    health = models.IntegerField(verbose_name="Здоровье", default=None, null=True, blank=True)
-    strength = models.IntegerField(verbose_name="Сила", default=None, null=True, blank=True)
-    defence = models.IntegerField(verbose_name="Защита", default=None, null=True, blank=True)
-    stamina = models.IntegerField(verbose_name="Выносливость", default=None, null=True, blank=True)
+    level = models.IntegerField(verbose_name="Уровень", null=True, blank=True)
+    health = models.IntegerField(verbose_name="Здоровье", null=True, blank=True)
+    strength = models.IntegerField(verbose_name="Сила", null=True, blank=True)
+    defence = models.IntegerField(verbose_name="Защита", null=True, blank=True)
+    stamina = models.IntegerField(verbose_name="Выносливость", null=True, blank=True)
 
     def __str__(self):
         return f"{self.pokemon.title_ru} {self.level}"
